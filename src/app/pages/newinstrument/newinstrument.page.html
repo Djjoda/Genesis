@@ -1,0 +1,92 @@
+
+
+  <ion-toolbar >
+    
+      <ion-chip class="chip" color="dark" size="small" (click)="closeNewinstrument(0)">
+        <ion-icon name="arrow-back"></ion-icon>
+        <ion-label>Back</ion-label>
+      </ion-chip>
+   
+  </ion-toolbar>
+
+
+
+<ion-content>
+
+  
+
+  <ion-card>
+    
+    <ion-grid>
+      <ion-row>
+        <ion-col>Name of New Intrument</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="name"></ion-input></ion-col>        
+      </ion-row>
+    </ion-grid>
+    
+    <ion-item-divider color="dark">Instrument´s limiting factors</ion-item-divider>
+
+    <p>*Separate the values with a point "."</p>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>Weight of the instrument with its accesories (kg)</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="weight"></ion-input></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>Resolution</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="resolution"></ion-input></ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-item-divider color="primary">Instrument´s limiting factors</ion-item-divider>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>Instrument working (hours)</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="working"></ion-input></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>Chemicals (years)</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="chemicals"></ion-input></ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <br>
+
+    <ion-item-divider color="dark">Measurment's attributes</ion-item-divider>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>Total amounts of chemicals for preparing & measuring 1 sample (ml)</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="amounts"></ion-input></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>Sample preparation time  for 1 sample (minute)</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="preparation"></ion-input></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>Sample meassurment time  for 1 sample (minute)</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="meassurment"></ion-input></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>Energy requeriment for  preparing & measuring 1 sample (Wh)</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="energy"></ion-input></ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <br>
+    <br>
+
+    <ion-button expand="block" color="dark" (click)="saveInstrument()">
+      <ion-icon slot="start" name="save"></ion-icon>
+      <ion-label>Save Instrument</ion-label>
+    </ion-button>
+
+  </ion-card>
+  
+
+  
+
+
+</ion-content>
