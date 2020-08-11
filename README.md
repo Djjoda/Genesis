@@ -2,11 +2,11 @@
 
 _Science Payload allows comparing organic material detection instruments for space exploration missions_
 
-#Requirements
+# Requirements
 
 _SciencePayload is built on Ionic Framework 5.2.3_
 
-#Installation
+# Installation
 
 1. git clone https://github.com/Djjoda/Genesis.git
 
