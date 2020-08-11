@@ -23,31 +23,60 @@
         <ion-col><ion-input type="text" [(ngModel)]="name"></ion-input></ion-col>        
       </ion-row>
     </ion-grid>
+
+    <ion-item-divider color="dark">Type of the instrument</ion-item-divider>
+
+    <ion-segment color="dark" value="specter" (ionChange)="typeinstrument($event)">
+      <ion-segment-button value="specter">
+        <ion-label>Spectrophotometer</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="separation">
+        <ion-label>Separation</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <br>
     
     <ion-item-divider color="dark">Instrument´s limiting factors</ion-item-divider>
-
-    <p>*Separate the values with a point "."</p>
 
     <ion-grid>
       <ion-row>
         <ion-col>Weight of the instrument with its accesories (kg)</ion-col>
         <ion-col><ion-input type="text" [(ngModel)]="weight"></ion-input></ion-col>
       </ion-row>
-      <ion-row>
-        <ion-col>Resolution</ion-col>
+      <ion-row [hidden]="!hiddenresolution">
+        <ion-col >Resolution</ion-col>
         <ion-col><ion-input type="text" [(ngModel)]="resolution"></ion-input></ion-col>
       </ion-row>
+      <ion-row [hidden]="hiddenresolution">
+        <ion-col>Number of theorical plates</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="plates" (ngModelChange) ="doSometing()"></ion-input></ion-col>
+      </ion-row>
+      <ion-row [hidden]="hiddenresolution">
+        <ion-col>Separation factor</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="separation" (ngModelChange) ="doSometing()"></ion-input></ion-col>
+      </ion-row>
+      <ion-row [hidden]="hiddenresolution">
+        <ion-col>Ratio of the retencion factors</ion-col>
+        <ion-col><ion-input type="text" [(ngModel)]="ratio" (ngModelChange) ="doSometing()"></ion-input></ion-col>
+      </ion-row>
+      <ion-row [hidden]="hiddenresolution">
+        <ion-col>Resolution</ion-col>
+        <ion-col><ion-label>{{resolution}}</ion-label></ion-col>
+      </ion-row>
     </ion-grid>
+
+    <br>
 
     <ion-item-divider color="primary">Instrument´s limiting factors</ion-item-divider>
 
     <ion-grid>
       <ion-row>
-        <ion-col>Instrument working (hours)</ion-col>
+        <ion-col>Instrument workingLifetime of the fastest failing asset of the instrument (hours)</ion-col>
         <ion-col><ion-input type="text" [(ngModel)]="working"></ion-input></ion-col>
       </ion-row>
       <ion-row>
-        <ion-col>Chemicals (years)</ion-col>
+        <ion-col>Chemical lifetime (years)</ion-col>
         <ion-col><ion-input type="text" [(ngModel)]="chemicals"></ion-input></ion-col>
       </ion-row>
     </ion-grid>

@@ -9,4 +9,8 @@ export class TabsPage {
 
   constructor() {}
 
+  openGenesis(){
+    window.open("https://damaresearch.com/gen111/","_blank");
+  }
+
 }

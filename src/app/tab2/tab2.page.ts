@@ -38,14 +38,14 @@ export class Tab2Page implements OnInit{
         this.name = this.user.profile.name;
         this.mail = this.user.profile.mail;
         this.comp = this.user.profile.comp;
-        setTimeout(()=>{ this.loading.dismiss() }, 300);
+        setTimeout(()=>{ this.loading.dismiss() }, 500);
       }).catch(err=>{
         console.log(err);
-        setTimeout(()=>{ this.loading.dismiss() }, 300);
+        setTimeout(()=>{ this.loading.dismiss() }, 500);
       })
     }).catch(err=>{
       console.log(err);
-      setTimeout(()=>{ this.loading.dismiss() }, 300);      
+      setTimeout(()=>{ this.loading.dismiss() }, 500);      
     });   
 
   }
@@ -65,6 +65,10 @@ export class Tab2Page implements OnInit{
 
     const { role, data } = await this.loading.onDidDismiss();
     // console.log('Loading dismissed!');
+  }
+
+  openGenesis(){
+    window.open("https://damaresearch.com/gen111/","_blank");
   }
 
 }

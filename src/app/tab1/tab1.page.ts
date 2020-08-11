@@ -33,15 +33,18 @@ export class Tab1Page implements OnInit {
   hiddentitle: boolean = false;
   hiddeninstrument: boolean = true;
   hiddenresults: boolean = true;
-  hiddenresults1: boolean = false;
+  hiddenresults1: boolean = true;
   hiddenresults2: boolean = true;
   hiddenresults3: boolean = true;
   hiddenresults4: boolean = true;
   hiddenresults5: boolean = true;
-  hiddenresults6: boolean = true;
+  hiddenresults6: boolean = false;
+
+  hiddencollecting: boolean = true;
+  hiddenpuntuallity: boolean = true;
 
 
-  spacecraft = {name: '', science: '', energy: '', travel: '', research: 'Collecting data from huge area'};
+  spacecraft = {name: '', science: '84', energy: '1050', travel: '0.75', research: 'Collecting data from huge area'};
 
   instruments = [];
   uinstruments = [];
@@ -72,6 +75,10 @@ export class Tab1Page implements OnInit {
 
   colors = ['#3880ff', '#3dc2ff', '#5260ff', '#2dd36f', '#ffc409', '#eb445a', '#222428', '#92949c', '#815800', '#a2c700', '#00c79c', '#0098c7', '#7700c7', '#c700ac', '#c7004c', '#2c0000', '#03002c', '#052c17', '#473409', '#4b1111'];
 
+  instrumentSelected: string = '';
+  flagresults: string = '6';
+
+
   ngOnInit(){
     
 
@@ -86,7 +93,6 @@ export class Tab1Page implements OnInit {
     this.uinstruments = [];
 
     this.instrument = [];
-
     this.instrumentGtest = [];
     this.instrumentCompare = [];
     this.instrumentOperating = [];
@@ -103,32 +109,37 @@ export class Tab1Page implements OnInit {
         this.api.instruments().then(res=>{
           var resp: any = res;
           this.instruments = resp.body.instruments;
-          setTimeout(()=>{ this.loading.dismiss() }, 300);
+          setTimeout(()=>{ this.loading.dismiss() }, 500);
         }).catch(err=>{
           console.log(err);  
-          setTimeout(()=>{ this.loading.dismiss() }, 300);    
+          setTimeout(()=>{ this.loading.dismiss() }, 500);    
         });    
       }).catch(err=>{
         console.log(err);
-        setTimeout(()=>{ this.loading.dismiss() }, 300);      
+        setTimeout(()=>{ this.loading.dismiss() }, 500);      
       });  
     }).catch(err=>{
       console.log(err);
-      setTimeout(()=>{ this.loading.dismiss() }, 300);      
+      setTimeout(()=>{ this.loading.dismiss() }, 500);      
     });   
 
   }
 
   nextMenu(val){
+    console.log(val);
+    
     switch (val) {
-      case 0:        
+      case 0:   
+        
         this.title = 'Spacecraft Capacity';
         this.hiddenmenu = false;
         this.hiddentitle = false;
         this.hiddeninstrument = true;
         this.hiddenresults = true;
+
         break;
       case 1:
+        
         if (this.spacecraft.name.length > 0) {
           if (this.spacecraft.science.length > 0 && this.spacecraft.science.includes(',') == false) {
             if (this.spacecraft.energy.length > 0 && this.spacecraft.energy.includes(',') == false) {
@@ -137,7 +148,10 @@ export class Tab1Page implements OnInit {
                 this.hiddenmenu = true;
                 this.hiddentitle = false;
                 this.hiddeninstrument = false;
-                this.hiddenresults = true;          
+                this.hiddenresults = true;    
+                this.hiddenpuntuallity = true;       
+                this.hiddencollecting = true;       
+
               } else {
                 this.toast('Please enter a value of Travel Time to the Planet (years)','warning');
               }          
@@ -153,11 +167,20 @@ export class Tab1Page implements OnInit {
         break;
       case 2:
         if (this.instrument.length > 1) {
+          this.getOperating();
+
+          this.charRsults();
+          this.charRsults2();
+          this.charRsults3();
+
           this.title = '';
           this.hiddenmenu = true;
           this.hiddentitle = true;
           this.hiddeninstrument = true;
-          this.hiddenresults = false;          
+          this.hiddenresults = false;  
+          
+          
+
         } else {
           this.toast('Please select 2 or more instruments','warning');
         }        
@@ -183,6 +206,7 @@ export class Tab1Page implements OnInit {
   }
 
   segmentChanged(event){
+    this.flagresults = event.detail.value;
     switch (event.detail.value) {
       case '1':
         this.hiddenresults1 = false;
@@ -191,6 +215,8 @@ export class Tab1Page implements OnInit {
         this.hiddenresults4 = true;
         this.hiddenresults5 = true;
         this.hiddenresults6 = true;
+        this.hiddencollecting = true;
+        this.hiddenpuntuallity = true;
         break;
       case '2':
         
@@ -200,6 +226,8 @@ export class Tab1Page implements OnInit {
         this.hiddenresults4 = true;
         this.hiddenresults5 = true;
         this.hiddenresults6 = true;
+        this.hiddencollecting = true;
+        this.hiddenpuntuallity = true;
         break;
       case '3':        
         this.hiddenresults1 = true;
@@ -208,6 +236,8 @@ export class Tab1Page implements OnInit {
         this.hiddenresults4 = true;
         this.hiddenresults5 = true;
         this.hiddenresults6 = true;
+        this.hiddencollecting = true;
+        this.hiddenpuntuallity = true;
         break;
       case '4':
         this.resCompare = []
@@ -230,49 +260,25 @@ export class Tab1Page implements OnInit {
         this.hiddenresults4 = false;
         this.hiddenresults5 = true;
         this.hiddenresults6 = true;
+        this.hiddencollecting = true;
+        this.hiddenpuntuallity = true;
         break;
       case '5':
-        this.resOperating = [];
-        this.instrumentOperating.forEach(instrument => {
-          var t_mweight=(Math.abs(parseFloat(this.spacecraft.science)-instrument.weight)/(instrument.amounts/1000));
-          var sum = (instrument.preparation + instrument.meassurment)/525600;
-          var otime = '';       
-          var t_mtime = 0;
-          var t_mtime2 = 0;
-  
-          if (instrument.chemicals < this.spacecraft.travel) {
-            otime = 'No function! the shelf life of instruments reached the resolution of the mision';
-          } else {
-            t_mtime = (instrument.chemicals - parseFloat(this.spacecraft.travel))/sum;
-            t_mtime2 = instrument.chemicals - parseFloat(this.spacecraft.travel);
-          }
-  
-          var time = 0;
-          var free = 0;
-          var val = 0;
-  
-          if (t_mweight > t_mtime){
-            val = Math.abs((t_mweight - t_mtime)*(instrument.preparation/1000));
-            time = t_mtime;
-            free = val;
-          } else {
-            time = t_mweight;
-            free = 0;
-          }
-  
-          this.resOperating.push({name: instrument.name, time, sample: t_mtime2, free});
-  
-        });
+        this.getOperating();
+
         this.hiddenresults1 = true;
         this.hiddenresults2 = true;
         this.hiddenresults3 = true;
         this.hiddenresults4 = true;
         this.hiddenresults5 = false;
         this.hiddenresults6 = true;
+        this.hiddencollecting = true;
+        this.hiddenpuntuallity = true;
         break;
       case '6':
         this.charRsults();
         this.charRsults2();
+        this.charRsults3();
 
         this.hiddenresults1 = true;
         this.hiddenresults2 = true;
@@ -280,11 +286,103 @@ export class Tab1Page implements OnInit {
         this.hiddenresults4 = true;
         this.hiddenresults5 = true;
         this.hiddenresults6 = false;
+        if (this.spacecraft.research == 'Collecting data from huge area') {
+          this.hiddencollecting = false;
+          this.hiddenpuntuallity = true;
+        } else {
+          this.hiddencollecting = true;
+          this.hiddenpuntuallity = false;
+        }        
         break;
     
       default:
         break;
     }
+  }
+
+  getOperating(){
+    this.resOperating = [];
+    var maxCollecting = [];
+
+
+    this.instrumentOperating.forEach(instrument => {
+      var t_mweight=parseFloat((Math.abs(parseFloat(this.spacecraft.science)-instrument.weight)/(instrument.amounts/1000)).toFixed(2));
+      var sum = parseFloat(((instrument.preparation + instrument.meassurment)/525600).toFixed(2));
+      var otime = '';       
+      var t_mtime = 0;
+      var t_mtime2 = 0;
+
+      if (instrument.chemicals < this.spacecraft.travel) {
+        otime = 'No function! the shelf life of instruments reached the resolution of the mision';
+        t_mtime = 0;
+        t_mtime2 = 0;
+      } else {
+        t_mtime = parseFloat(((instrument.chemicals - parseFloat(this.spacecraft.travel))/sum).toFixed(2));
+        t_mtime2 = instrument.chemicals - parseFloat(this.spacecraft.travel);
+      }
+
+      var time = 0;
+      var free = 0;
+      var val = 0;
+
+      if (t_mweight > t_mtime){
+        val = parseFloat((Math.abs((t_mweight - t_mtime)*(instrument.preparation/1000))).toFixed(2));
+        time = t_mtime;
+        free = val;
+      } else {
+        time = t_mweight;
+        free = 0;
+      }
+
+      this.resOperating.push({name: instrument.name, time, sample: t_mtime2, free});
+      
+      maxCollecting.push(t_mtime2);
+      
+    });
+
+    if (this.flagresults == '6') {
+      if (this.spacecraft.research == 'Collecting data from huge area') {
+        for (let i = 0; i < maxCollecting.length; i++) {
+          if (Math.max(...maxCollecting) == maxCollecting[i]) {
+            this.instrumentSelected = this.resOperating[i].name;
+          }
+        }  
+        this.hiddencollecting = false;    
+        this.hiddenpuntuallity = true;    
+      } else {
+        this.hiddencollecting = true;    
+        this.hiddenpuntuallity = false;
+        var maxresolution = [];
+        var maxmeassurement = [];
+        var posresolution = 0;
+        var posmeassurement = 0;
+
+        this.instruments.forEach(element => {
+          maxresolution.push(element.resolution);
+          maxmeassurement.push(element.meassurment);
+        });
+
+        console.log(maxresolution,maxmeassurement);
+        
+        for (let i = 0; i < maxresolution.length; i++) {
+          if (Math.max(...maxresolution) == maxresolution[i]) {
+            posresolution = i;            
+          }
+        } 
+        for (let i = 0; i < maxmeassurement.length; i++) {
+          if (Math.max(...maxmeassurement) == maxmeassurement[i]) {
+            posmeassurement = i;            
+          }
+        }  
+
+        if (posresolution == posmeassurement) {
+          this.instrumentSelected = this.resOperating[posresolution].name;
+        }
+
+      }      
+    }   
+    
+    
   }
 
   researchSelect(event){
@@ -360,6 +458,8 @@ export class Tab1Page implements OnInit {
     this.instrument.forEach(element => {
       series.push({name: element.name, type: null, data: [parseFloat(element.meassurment)], color: this.colors[i]});
       i = i+1;
+
+
     });
 
     HighCharts.chart("chart1", {
@@ -407,6 +507,38 @@ export class Tab1Page implements OnInit {
       },
       series 
     });
+  }
+
+  charRsults3(){
+    var series = [];
+    var i = 0;
+    this.resOperating.forEach(element => {
+      series.push({name: element.name, type: null, data: [parseFloat(element.sample)], color: this.colors[i]});
+      i = i+1;
+    });
+
+    HighCharts.chart("chart3", {
+      chart: {
+        type: "bar"
+      },
+      title: {
+        text: "Samples"
+      },
+      xAxis: {
+        categories: ["Instruments"]
+      },
+      yAxis: {
+        title: {
+          text: ""
+        }
+      },
+      series 
+    });
+  }
+
+
+  openGenesis(){
+    window.open("https://damaresearch.com/gen111/","_blank");
   }
 
 

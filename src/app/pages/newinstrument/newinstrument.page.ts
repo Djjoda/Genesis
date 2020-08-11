@@ -32,12 +32,28 @@ export class NewinstrumentPage implements OnInit {
   weight: string = '';
   working: string = '';
   meassurment: string = '';
+  plates: string = '';
+  separation: string = '';
+  ratio: string = '';
+
+  hiddenresolution: boolean = true;
 
   ngOnInit() {
 
   }
 
   saveInstrument(){
+
+    this.amounts = this.amounts.replace(',','.');
+    this.chemicals = this.chemicals.replace(',','.');
+    this.energy = this.energy.replace(',','.');
+    this.preparation = this.preparation.replace(',','.');
+    this.resolution = this.resolution.replace(',','.');
+    this.weight = this.weight.replace(',','.');
+    this.working = this.working.replace(',','.');
+    this.meassurment = this.meassurment.replace(',','.');
+    
+
     var data = {"body":{
       "id": this.id,
       "instrument": {
@@ -55,7 +71,7 @@ export class NewinstrumentPage implements OnInit {
 
     if (this.name.length > 0) {
       if (this.weight.length > 0 && this.weight.includes(',') == false) {
-        if (this.resolution.length > 0 && this.resolution.includes(',') == false) {
+        if (this.resolution.length > 0 && this.resolution.includes(',') == false && this.resolution != 'NaN' && this.resolution != 'Infinity') {
           if (this.working.length > 0 && this.working.includes(',') == false) {
             if (this.chemicals.length > 0 && this.chemicals.includes(',') == false) {
               if (this.amounts.length > 0 && this.amounts.includes(',') == false) {
@@ -92,7 +108,7 @@ export class NewinstrumentPage implements OnInit {
             this.toast('Please enter the working of the instrument','warning');
           } 
         } else {
-          this.toast('Please enter the resolution of the instrument','warning');
+          this.toast('Please enter a correct value for the resolution of the instrument','warning');
         } 
       } else {
         this.toast('Please enter the weight of the instrument','warning');
@@ -126,6 +142,30 @@ export class NewinstrumentPage implements OnInit {
 
     const { role, data } = await this.loading.onDidDismiss();
     // console.log('Loading dismissed!');
+  }
+
+  typeinstrument(event){
+    switch (event.detail.value) {
+      case "specter":
+        this.resolution = '';
+        this.hiddenresolution = true;
+        break;
+      case "separation":
+        this.resolution = '';
+        this.hiddenresolution = false;
+        break;
+    
+      default:
+        break;
+    }
+  }
+
+  doSometing(){
+    this.plates = this.plates.replace(',','.');
+    this.separation = this.separation.replace(',','.');
+    this.ratio = this.ratio.replace(',','.');
+
+    this.resolution = ((1/4) * Math.sqrt(parseFloat(this.plates)) * (((parseFloat(this.separation)-1)/parseFloat(this.separation))) * (parseFloat(this.ratio)/(parseFloat(this.ratio)-1))).toFixed(2);
   }
 
 }

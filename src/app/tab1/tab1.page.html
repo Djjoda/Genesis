@@ -2,10 +2,19 @@
 <ion-toolbar color="dark">
 
   <ion-title [hidden]="hiddentitle">
-    {{title}}
+    <ion-item color="dark">
+      <ion-thumbnail slot="end" (click)="openGenesis()">
+        <img src="../../assets/icon/logo_vectorized.png">
+      </ion-thumbnail>
+      <h6>SciencePayload from Genesis1:11 <sup>TM</sup></h6>
+    </ion-item>
   </ion-title>
 
-  <ion-segment scrollable [hidden]="hiddenresults" (ionChange)="segmentChanged($event)" value="1">
+  <ion-segment scrollable [hidden]="hiddenresults" (ionChange)="segmentChanged($event)" value="6">
+    <ion-segment-button value="6" layout="icon-bottom">
+      <ion-icon name="bar-chart"></ion-icon>
+      <ion-label>Preferred Instrument</ion-label>
+    </ion-segment-button>
     <ion-segment-button value="1" layout="icon-bottom">
       <ion-icon name="planet"></ion-icon>
       <ion-label>Spacecraft</ion-label>
@@ -26,10 +35,7 @@
       <ion-icon name="hourglass"></ion-icon>
       <ion-label>Operating Time & Free</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="6" layout="icon-bottom">
-      <ion-icon name="bar-chart"></ion-icon>
-      <ion-label>Preferret Instrument</ion-label>
-    </ion-segment-button>
+    
   </ion-segment>
 
   
@@ -44,10 +50,10 @@
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col>Name</ion-col>
+          <ion-col>Name of the project</ion-col>
           <ion-col><ion-input type="text" [(ngModel)]="spacecraft.name"></ion-input></ion-col>
         </ion-row>
-        <ion-row>
+        <!-- <ion-row>
           <ion-col>Science Payload (Kg)</ion-col>
           <ion-col><ion-input type="text" [(ngModel)]="spacecraft.science"></ion-input></ion-col>
         </ion-row>
@@ -62,7 +68,7 @@
         <ion-row>
           <ion-col></ion-col>
           <ion-col><p>*Separate the values with a point "."</p></ion-col>
-        </ion-row>
+        </ion-row> -->
       </ion-grid>
       <br>
       
@@ -256,27 +262,31 @@
     </ion-grid>
 
 
-    <ion-card-subtitle [hidden]="hiddenresults6">Preferred instrument accodance with the research's purpose is</ion-card-subtitle>
+    <ion-card-subtitle [hidden]="hiddenresults6">Preferred instrument in accordance with {{spacecraft.research}} is</ion-card-subtitle>
     <br [hidden]="hiddenresults6">
-    <ion-chip [hidden]="hiddenresults6" class="chip2" color="success">Intrumento Seleccionado</ion-chip>
+    <ion-chip [hidden]="hiddenresults6" class="chip2" color="success">{{instrumentSelected}}</ion-chip>
     <br>
     <br>
 
   </ion-card>
 
-  <br [hidden]="hiddenresults6">
-  <div [hidden]="hiddenresults6" id="chart1" style="width:100%; height:400px;"></div>
-  <br [hidden]="hiddenresults6">
-  <div [hidden]="hiddenresults6" id="chart2" style="width:100%; height:400px;"></div>
+  <br [hidden]="hiddenpuntuallity">
+  <div [hidden]="hiddenpuntuallity" id="chart1" style="width:100%; height:400px;"></div>
+  <br [hidden]="hiddenpuntuallity">
+  <br [hidden]="hiddenpuntuallity">
+  <div [hidden]="hiddenpuntuallity" id="chart2" style="width:100%; height:400px;"></div>
+  <br [hidden]="hiddencollecting">
+  <br [hidden]="hiddencollecting">
+  <div [hidden]="hiddencollecting" id="chart3" style="width:100%; height:400px;"></div>
 
 
 
-  <ion-fab [hidden]="hiddenresults" vertical="bottom" horizontal="end" slot="fixed">
+  <!-- <ion-fab [hidden]="hiddenresults" vertical="bottom" horizontal="end" slot="fixed">
     <ion-chip class="chip" color="dark" size="small" (click)="nextMenu(1)">
       <ion-icon name="save"></ion-icon>
       <ion-label>Save Experiment</ion-label>
     </ion-chip>
-  </ion-fab>
+  </ion-fab> -->
 
   <ion-fab [hidden]="hiddenresults" vertical="bottom" horizontal="start" slot="fixed">
     <ion-chip class="chip" color="dark" size="small" (click)="nextMenu(1)">
