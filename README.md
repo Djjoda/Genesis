@@ -20,3 +20,4 @@ _The main encoding is in ../src/app/tab1/tab1.page.ts_
 
 
 _Genesis 1:11 TM_
+https://genesis-de7d3.web.app/
