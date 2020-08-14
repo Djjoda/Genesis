@@ -50,7 +50,7 @@ export class Tab1Page implements OnInit {
   hiddenpuntuallity: boolean = true;
 
 
-  spacecraft = {name: '', science: '84', energy: '1050', travel: '0.75', research: 'Collecting data from huge area'};
+  spacecraft = {name: '', science: '40', energy: '1050', travel: '0.75', research: 'Collecting data from huge area'};
 
   instruments = [];
   uinstruments = [];
