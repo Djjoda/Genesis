@@ -4,9 +4,14 @@ import { NewinstrumentPage } from '../pages/newinstrument/newinstrument.page';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 
-import * as HighCharts from "highcharts";
+import * as highchart  from "highcharts/highcharts.js";
 
 import * as MathJS from 'mathjs'
+
+declare var require: any;
+let hcharts = require('highcharts');
+require('highcharts/modules/exporting')(hcharts);
+
 
 
 @Component({
@@ -26,6 +31,7 @@ export class Tab1Page implements OnInit {
 
 
   ) {}
+  
 
   title: string = 'Spacecraft Capacity';
 
@@ -126,7 +132,7 @@ export class Tab1Page implements OnInit {
   }
 
   nextMenu(val){
-    console.log(val);
+    // console.log(val);
     
     switch (val) {
       case 0:   
@@ -362,7 +368,7 @@ export class Tab1Page implements OnInit {
           maxmeassurement.push(element.meassurment);
         });
 
-        console.log(maxresolution,maxmeassurement);
+        // console.log(maxresolution,maxmeassurement);
         
         for (let i = 0; i < maxresolution.length; i++) {
           if (Math.max(...maxresolution) == maxresolution[i]) {
@@ -462,7 +468,7 @@ export class Tab1Page implements OnInit {
 
     });
 
-    HighCharts.chart("chart1", {
+    hcharts.chart("chart1", {
       chart: {
         type: "bar"
       },
@@ -478,7 +484,13 @@ export class Tab1Page implements OnInit {
           text: "min"
         }
       },      
-      series
+      series,
+      credits: {
+        enabled: false
+      },
+      exporting: {
+        enabled: true
+      }
     });
   }
 
@@ -490,7 +502,7 @@ export class Tab1Page implements OnInit {
       i = i+1;
     });
 
-    HighCharts.chart("chart2", {
+    hcharts.chart("chart2", {
       chart: {
         type: "bar"
       },
@@ -505,7 +517,13 @@ export class Tab1Page implements OnInit {
           text: ""
         }
       },
-      series 
+      exporting: {
+        enabled: true
+      },
+      series,
+      credits: {
+        enabled: false
+      }
     });
   }
 
@@ -517,7 +535,7 @@ export class Tab1Page implements OnInit {
       i = i+1;
     });
 
-    HighCharts.chart("chart3", {
+    hcharts.chart("chart3", {
       chart: {
         type: "bar"
       },
@@ -532,7 +550,13 @@ export class Tab1Page implements OnInit {
           text: ""
         }
       },
-      series 
+      series,
+      credits: {
+        enabled: false
+      },
+      exporting: {
+        enabled: true
+      } 
     });
   }
 
@@ -540,6 +564,23 @@ export class Tab1Page implements OnInit {
   openGenesis(){
     window.open("https://damaresearch.com/gen111/","_blank");
   }
+
+  selectspacecraft(event){
+    switch (event.detail.value) {
+      case 'genesis':
+        this.spacecraft.science = '40';
+        this.spacecraft.energy = '1050';
+        break;
+      case 'rover':
+        this.spacecraft.science = '84';
+        this.spacecraft.energy = '1050';
+        break;
+    
+      default:
+        break;
+    }
+  }
+
 
 
 }

@@ -43,11 +43,13 @@
 
 
 <ion-content [fullscreen]="true">
+  
 
   <ion-card [hidden]="hiddenmenu">
 
     
     <ion-card-content>
+
       <ion-grid>
         <ion-row>
           <ion-col>Name of the project</ion-col>
@@ -70,7 +72,43 @@
           <ion-col><p>*Separate the values with a point "."</p></ion-col>
         </ion-row> -->
       </ion-grid>
+
       <br>
+
+
+      <ion-item-divider color="dark">Spacecraft</ion-item-divider>
+      <br>
+
+      <ion-segment color="dark" (ionChange)="selectspacecraft($event)" value="genesis">
+        <ion-segment-button value="genesis">
+          <img src="../../assets/capsule.png"/>
+          <br>
+          <ion-card-subtitle>Genesis1:11 Rocket Capsule</ion-card-subtitle>
+          <br>
+        </ion-segment-button>
+        <ion-segment-button value="rover">
+          <img src="../../assets/rover.png"/>
+          <br>
+          <ion-card-subtitle>Curiosity Mars Rover</ion-card-subtitle>
+          <br>
+        </ion-segment-button>
+      </ion-segment>
+
+      <br>
+      <br>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>Science Payload (Kg)</ion-col>
+          <ion-col>{{spacecraft.science}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>Energy Supply (W/h)</ion-col>
+          <ion-col>{{spacecraft.energy}}</ion-col>
+        </ion-row>        
+      </ion-grid>
+
+      
       
       <ion-list>
         <ion-radio-group value="Collecting data from huge area" (ionChange)="researchSelect($event)">
@@ -271,7 +309,7 @@
   </ion-card>
 
   <br [hidden]="hiddenpuntuallity">
-  <div [hidden]="hiddenpuntuallity" id="chart1" style="width:100%; height:400px;"></div>
+  <div [hidden]="hiddenpuntuallity" id="chart1" style="width:100%; height:400px; "></div>
   <br [hidden]="hiddenpuntuallity">
   <br [hidden]="hiddenpuntuallity">
   <div [hidden]="hiddenpuntuallity" id="chart2" style="width:100%; height:400px;"></div>
