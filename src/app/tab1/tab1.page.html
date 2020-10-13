@@ -4,7 +4,7 @@
   <ion-title [hidden]="hiddentitle">
     <ion-item color="dark">
       <ion-thumbnail slot="end" (click)="openGenesis()">
-        <img src="../../assets/icon/logo_vectorized.png">
+        <img class="img2" src="../../assets/icon/logo_vectorized.png">
       </ion-thumbnail>
       <h6>SciencePayload from Genesis1:11 <sup>TM</sup></h6>
     </ion-item>
@@ -15,14 +15,18 @@
       <ion-icon name="bar-chart"></ion-icon>
       <ion-label>Preferred Instrument</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="1" layout="icon-bottom">
-      <ion-icon name="planet"></ion-icon>
-      <ion-label>Spacecraft</ion-label>
+    <ion-segment-button value="5" layout="icon-bottom">
+      <ion-icon name="hourglass"></ion-icon>
+      <ion-label>Operating Time & Free</ion-label>
     </ion-segment-button>
     <ion-segment-button value="2" layout="icon-bottom">
       <ion-icon name="flask"></ion-icon>
       <ion-label>Instruments</ion-label>
     </ion-segment-button>
+    <ion-segment-button value="1" layout="icon-bottom">
+      <ion-icon name="planet"></ion-icon>
+      <ion-label>Spacecraft</ion-label>
+    </ion-segment-button>    
     <ion-segment-button value="3" layout="icon-bottom">
       <ion-icon name="list"></ion-icon>
       <ion-label>Results</ion-label>
@@ -31,10 +35,7 @@
       <ion-icon name="color-filter"></ion-icon>
       <ion-label>Compare</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="5" layout="icon-bottom">
-      <ion-icon name="hourglass"></ion-icon>
-      <ion-label>Operating Time & Free</ion-label>
-    </ion-segment-button>
+    
     
   </ion-segment>
 
@@ -287,8 +288,8 @@
     <ion-grid [hidden]="hiddenresults5">
       <ion-row>
         <ion-col><ion-label color="primary">Name</ion-label></ion-col>
-        <ion-col><ion-label color="primary">Time (years)</ion-label></ion-col>
         <ion-col><ion-label color="primary">Samples (number)</ion-label></ion-col>
+        <ion-col><ion-label color="primary">Time (years)</ion-label></ion-col>
         <ion-col><ion-label color="primary">Free Weight</ion-label></ion-col>        
       </ion-row>
       <ion-row *ngFor="let operating of resOperating">
@@ -303,6 +304,21 @@
     <ion-card-subtitle [hidden]="hiddenresults6">Preferred instrument in accordance with {{spacecraft.research}} is</ion-card-subtitle>
     <br [hidden]="hiddenresults6">
     <ion-chip [hidden]="hiddenresults6" class="chip2" color="success">{{instrumentSelected}}</ion-chip>
+    <!-- <ion-label [hidden]="hiddenresults6">Preferred instrument in accordance with {{spacecraft.research}} is</ion-label>
+    <br [hidden]="hiddenresults6">
+    <ion-chip [hidden]="hiddenresults6" class="chip" color="dark">{{instrumentSelected}}</ion-chip> -->
+    <br>
+    <br>
+    
+    <ion-grid>
+      <ion-row *ngFor="let instrument of excluded">
+        <ion-col>{{instrument}}</ion-col>
+        <ion-col><ion-label color="tertiary">Exceeds weight limit</ion-label></ion-col>
+      </ion-row>
+    </ion-grid>
+    
+    <ion-label color="danger" [hidden]="hiddenmsj">The instrument is heavier than allowed. Allowable payload: {{spacecraft.science}} kg</ion-label>
+
     <br>
     <br>
 

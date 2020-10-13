@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, ToastController, LoadingController } from '@ionic/angular';
+import { ModalController, ToastController, LoadingController, AlertController } from '@ionic/angular';
 import { NewinstrumentPage } from '../pages/newinstrument/newinstrument.page';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import * as highchart  from "highcharts/highcharts.js";
 
 import * as MathJS from 'mathjs'
+import { isNullOrUndefined, isNull } from 'util';
 
 declare var require: any;
 let hcharts = require('highcharts');
@@ -26,7 +27,8 @@ export class Tab1Page implements OnInit {
     public toastController: ToastController,
     public api: ApiService,
     public auth: AuthService,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
+    public alertController: AlertController
 
 
 
@@ -45,6 +47,7 @@ export class Tab1Page implements OnInit {
   hiddenresults4: boolean = true;
   hiddenresults5: boolean = true;
   hiddenresults6: boolean = false;
+  hiddenmsj: boolean = true;
 
   hiddencollecting: boolean = true;
   hiddenpuntuallity: boolean = true;
@@ -80,12 +83,17 @@ export class Tab1Page implements OnInit {
   }
 
   colors = ['#3880ff', '#3dc2ff', '#5260ff', '#2dd36f', '#ffc409', '#eb445a', '#222428', '#92949c', '#815800', '#a2c700', '#00c79c', '#0098c7', '#7700c7', '#c700ac', '#c7004c', '#2c0000', '#03002c', '#052c17', '#473409', '#4b1111'];
+  // colors = ['#000000', '#505050', '#7C7C7C', '#A9A9A9', '#ffc409', '#eb445a', '#222428', '#92949c', '#815800', '#a2c700', '#00c79c', '#0098c7', '#7700c7', '#c700ac', '#c7004c', '#2c0000', '#03002c', '#052c17', '#473409', '#4b1111'];
 
   instrumentSelected: string = '';
   flagresults: string = '6';
 
+  excluded = [];
+
 
   ngOnInit(){
+
+    this.presentAlert();
     
 
     this.loadData();
@@ -254,7 +262,11 @@ export class Tab1Page implements OnInit {
           if (this.spacecraft.research == 'Collecting data from huge area') {
             ptime = this.chi2pdf(instrument.meassurment,this.realCompare.meassurment);
           } else {
-            ptime = this.chi2pdf(instrument.working,this.realCompare.working);
+            if (isNaN(this.chi2pdf(instrument.working,this.realCompare.working)) == true) {
+              ptime = 0;
+            } else {
+              ptime = this.chi2pdf(instrument.working,this.realCompare.working);
+            }
           }
   
           this.resCompare.push({name: instrument.name, pweight, penergy, ptime});                
@@ -310,10 +322,12 @@ export class Tab1Page implements OnInit {
     this.resOperating = [];
     var maxCollecting = [];
 
+    this.excluded = [];
+
 
     this.instrumentOperating.forEach(instrument => {
       var t_mweight=parseFloat((Math.abs(parseFloat(this.spacecraft.science)-instrument.weight)/(instrument.amounts/1000)).toFixed(2));
-      var sum = parseFloat(((instrument.preparation + instrument.meassurment)/525600).toFixed(2));
+      var sum = ((instrument.preparation + instrument.meassurment)/525600);
       var otime = '';       
       var t_mtime = 0;
       var t_mtime2 = 0;
@@ -326,6 +340,7 @@ export class Tab1Page implements OnInit {
         t_mtime = parseFloat(((instrument.chemicals - parseFloat(this.spacecraft.travel))/sum).toFixed(2));
         t_mtime2 = instrument.chemicals - parseFloat(this.spacecraft.travel);
       }
+
 
       var time = 0;
       var free = 0;
@@ -340,50 +355,79 @@ export class Tab1Page implements OnInit {
         free = 0;
       }
 
+
       this.resOperating.push({name: instrument.name, time, sample: t_mtime2, free});
-      
-      maxCollecting.push(t_mtime2);
+
+      if ((parseFloat(this.spacecraft.science)-instrument.weight) <= 0) {
+        maxCollecting.push(0);
+        this.excluded.push(instrument.name);
+      } else {
+        maxCollecting.push(t_mtime2);
+      }      
       
     });
 
+    
+
     if (this.flagresults == '6') {
-      if (this.spacecraft.research == 'Collecting data from huge area') {
+      if (this.spacecraft.research == 'Collecting data from huge area') {    
         for (let i = 0; i < maxCollecting.length; i++) {
           if (Math.max(...maxCollecting) == maxCollecting[i]) {
             this.instrumentSelected = this.resOperating[i].name;
+            if (maxCollecting[i] == 0) {
+              this.hiddenmsj = false;              
+            }else{
+              this.hiddenmsj = true;
+            }
           }
-        }  
+        } 
+        
+         
         this.hiddencollecting = false;    
         this.hiddenpuntuallity = true;    
       } else {
+        this.excluded = [];
+        
         this.hiddencollecting = true;    
         this.hiddenpuntuallity = false;
         var maxresolution = [];
         var maxmeassurement = [];
         var posresolution = 0;
-        var posmeassurement = 0;
 
-        this.instruments.forEach(element => {
-          maxresolution.push(element.resolution);
-          maxmeassurement.push(element.meassurment);
+        this.instrumentOperating.forEach(element => {
+          if ((parseFloat(this.spacecraft.science)-element.weight) <= 0) {
+            maxresolution.push(0);
+            maxmeassurement.push(0);            
+          } else {
+            maxresolution.push(element.resolution);
+            maxmeassurement.push(element.meassurment);
+          }
+         
+
         });
 
-        // console.log(maxresolution,maxmeassurement);
-        
+        var relation = [];
         for (let i = 0; i < maxresolution.length; i++) {
-          if (Math.max(...maxresolution) == maxresolution[i]) {
-            posresolution = i;            
+          if (maxresolution[i] == 0 && maxmeassurement[i] == 0) {
+            relation.push(0);
+            this.excluded.push(this.resOperating[i].name);
+          } else {
+            relation.push(maxresolution[i]/maxmeassurement[i]);
+          }          
+        }
+        
+
+        for (let i = 0; i < relation.length; i++) {
+          if (Math.max(...relation) == relation[i]) {
+            posresolution = i;  
+            this.instrumentSelected = this.resOperating[posresolution].name;  
+            if (relation[i] == 0) {
+              this.hiddenmsj = false;
+            }else{
+              this.hiddenmsj = true;
+            }        
           }
         } 
-        for (let i = 0; i < maxmeassurement.length; i++) {
-          if (Math.max(...maxmeassurement) == maxmeassurement[i]) {
-            posmeassurement = i;            
-          }
-        }  
-
-        if (posresolution == posmeassurement) {
-          this.instrumentSelected = this.resOperating[posresolution].name;
-        }
 
       }      
     }   
@@ -579,6 +623,19 @@ export class Tab1Page implements OnInit {
       default:
         break;
     }
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      backdropDismiss: false,
+      // header: 'Alert',
+      // subHeader: 'Subtitle',
+      message: 'To obtain the latest version of the platform, you must be enter through an incognito window',
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 
 

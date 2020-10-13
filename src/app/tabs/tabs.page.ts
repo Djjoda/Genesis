@@ -10,7 +10,7 @@ export class TabsPage {
   constructor() {}
 
   openGenesis(){
-    window.open("https://damaresearch.com/gen111/","_blank");
+    window.open("https://genesissus.eu/gen111/?fbclid=IwAR1zx2gFwLAt56zjPPaAFbCeQJfDaIBmFYjJ4IVcyjQLePTaKs5nMihFFmg","_blank");
   }
 
 }
