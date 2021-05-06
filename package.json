@@ -25,7 +25,7 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^5.0.0",
     "firebase": "^7.16.1",
-    "highcharts": "^8.1.2",
+    "highcharts": "^9.0.0",
     "mathjs": "^7.1.0",
     "rxjs": "~6.5.1",
     "tslib": "^1.10.0",
